@@ -10,7 +10,7 @@ apt-get -y install sysstat
 pip3 install virtualenv 
 pip3 install -r requirements.txt
 
-echo "cd $PWD/../lib/" >> skill_search.sh
+echo "cd $PWD/lib/" >> skill_search.sh
 cp skill_search.sh ~/
 # PWD=~/neural_skill_search
 # mkdir -p ~/neural_skill_search/
