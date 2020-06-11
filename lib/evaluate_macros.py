@@ -29,6 +29,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("load_model", type=str, default=None, help="If the model path contains enough info, this is the only necessary argument.(directory to *.pkl)")
 parser.add_argument("--rl_model", type=str, default=None, help="ppo or a2c")
+parser.add_argument("--logdir", type=str, default=None, help="save path")
 parser.add_argument("--record", action="store_true")
 parser.add_argument("--log_action", action="store_true")
 parser.add_argument("--log_picture", action="store_true")
@@ -37,9 +38,7 @@ parser.add_argument("--train_total_timesteps", type=int, default=10000000)
 parser.add_argument("--eval_max_steps", type=int, default=int(10e6))
 args = parser.parse_args()
 
-env_id = args.env_id
-skills = args.skills
-logdir = args.logdir
+
 train_total_timesteps=args.train_total_timesteps
 
 MAX_VIDEO_LENGTH = 1000000
@@ -66,36 +65,32 @@ def record_():
     os.path.isfile(model_path)
     
     # search skills
-    skills=None
-    if args.skills is None:
-        m=re.search("\[[0-9\, \[\]]*\]", model_path)
-        if m is  None:
-            raise ValueError("load_model: {} does not contain skills".format(model_path))
-        skills = str_to_skills(m.group(0))
-    else:
-        skills = str_to_skills(args.skills)
+    
+    m=re.search("\[[0-9\, \[\]]*\]", model_path)
+    if m is  None:
+        raise ValueError("load_model: {} does not contain skills".format(model_path))
+    skills = str_to_skills(m.group(0))
+    
 
     
     # search env-id
     env_id_list = ENV_LIST
     env_id=None
-    if args.env_id is None:
-        searched = False
-        m = re.search("[A-Z][a-z]*NoFrameskip-v4", model_path)
-        if m is not None:
-            searched = True
-            env_id = m.group(0)
-        
-        if searched is not True:
-            for id_ in env_id_list:
-                if  id_.lower() in model_path.lower():
-                    searched = True
-                    env_id = id_ + "NoFrameskip-v4"
+    searched = False
+    m = re.search("[A-Z][a-z]*NoFrameskip-v4", model_path)
+    if m is not None:
+        searched = True
+        env_id = m.group(0)
+    
+    if searched is not True:
+        for id_ in env_id_list:
+            if  id_.lower() in model_path.lower():
+                searched = True
+                env_id = id_ + "NoFrameskip-v4"
 
-        if searched is not True:
-            raise ValueError("load_model: {} does not contain env id".format(model_path))
-    else:
-        env_id=args.env_id
+    if searched is not True:
+        raise ValueError("load_model: {} does not contain env id".format(model_path))
+    
     save_path = args.logdir
     if save_path is None:
         save_path = os.path.dirname(model_path)
