@@ -1,0 +1,5 @@
+{_save_model_name: !!python/object/apply:collections.deque [[]], _serial_num: 1, env_id: AsteroidsNoFrameskip-v4,
+  evaluate_freq: 0, gamma: 0.99, log_action_skill: true, num_cpu: 20, preserve_model: 1,
+  reset_num_timesteps: true, save_monitor: true, save_path: '/home/allenchen/Moana_proj/neural_skill_search/log/other/20M_top3_life/Asteroids/dqn/ppo/top1/[[4,
+    3, 1], [1, 3], [1, 0, 0]]', save_tensorboard: true, seed: 2000, use_converge_parameter: false,
+  verbose: 0}
